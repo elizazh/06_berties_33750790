@@ -9,7 +9,7 @@ This repo contains the Week-6 lab work for Dynamic Web Apps:
 - Node.js + npm
 - MySQL (local)
 - GitHub repo name: **06_berties_33750790**
-
+home=http://www.doc.gold.ac.uk/usr/147/
 ---
 
 ## 1) Local database setup
