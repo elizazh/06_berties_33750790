@@ -5,15 +5,13 @@ const mysql = require('mysql2');
 const app = express();
 const port = process.env.PORT || 8000;
 
-// Set EJS views (Lab 6d+)
+/* --- View engine + body parsing --- */
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
-
-// Body parsing for forms
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// MySQL connection pool (Lab 6abc)
+/* --- MySQL pool --- */
 const db = mysql.createPool({
   host: 'localhost',
   user: 'berties_books_app',
@@ -25,14 +23,21 @@ const db = mysql.createPool({
 });
 global.db = db;
 
-// Home page → menu (Lab 6d)
-app.get('/', (req, res) => res.render('index.ejs'));
+/* --- Static pages (to match the menu screenshot) --- */
+app.get('/',       (req, res) => res.render('index.ejs'));
+app.get('/about',  (req, res) => res.render('about.ejs'));
+app.get('/search', (req, res) => res.render('search.ejs'));
+app.get('/register',(req,res) => res.render('register.ejs'));
 
-// /books routes (Lab 6abc/def)
+/* --- Books router --- */
 const booksRouter = require('./routes/books');
 app.use('/books', booksRouter);
 
-// Start server
-app.listen(port, () => {
+/* --- (nice) basic error handlers --- */
+app.use((req,res)=>res.status(404).send('404 Not Found'));
+app.use((err,req,res,next)=>{ console.error(err); res.status(500).send('Server error'); });
+
+/* --- Start server (bind all interfaces) --- */
+app.listen(port, '0.0.0.0', () => {
   console.log(`Server running on http://localhost:${port}`);
 });
