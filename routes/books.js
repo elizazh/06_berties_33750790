@@ -1,15 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-// 6A–C: list (JSON endpoint kept for safety)
-router.get('/list.json', (req, res, next) => {
-  db.query('SELECT * FROM books', (err, rows) => {
-    if (err) return next(err);
-    res.send(rows);
-  });
-});
-
-// 6D: list rendered
+// 6A–C: LIST (rendered in 6d)
 router.get('/list', (req, res, next) => {
   db.query('SELECT * FROM books', (err, rows) => {
     if (err) return next(err);
@@ -17,7 +9,7 @@ router.get('/list', (req, res, next) => {
   });
 });
 
-// 6D: add book
+// 6D: ADD BOOK (form + insert)
 router.get('/addbook', (req, res) => res.render('addbook.ejs'));
 
 router.post('/bookadded', (req, res, next) => {
@@ -28,7 +20,7 @@ router.post('/bookadded', (req, res, next) => {
   });
 });
 
-// 6E: bargain books
+// 6E: BARGAIN BOOKS (< £20)
 router.get('/bargainbooks', (req, res, next) => {
   db.query('SELECT name, price FROM books WHERE price < 20', (err, rows) => {
     if (err) return next(err);
@@ -36,7 +28,7 @@ router.get('/bargainbooks', (req, res, next) => {
   });
 });
 
-// 6E: search (exact)
+// 6E: SEARCH (exact)
 router.get('/search', (req, res, next) => {
   const { keyword } = req.query;
   db.query('SELECT name, price FROM books WHERE name = ?', [keyword], (err, rows) => {
@@ -45,9 +37,9 @@ router.get('/search', (req, res, next) => {
   });
 });
 
-// 6E: search (advanced, partial + case-insensitive)
+// 6E: SEARCH (advanced: partial + case-insensitive)
 router.get('/search-adv', (req, res, next) => {
-  const { keyword = '' } = req.query;
+  const keyword = (req.query.keyword || '').trim();
   const sql = "SELECT name, price FROM books WHERE LOWER(name) LIKE LOWER(CONCAT('%', ?, '%'))";
   db.query(sql, [keyword], (err, rows) => {
     if (err) return next(err);
