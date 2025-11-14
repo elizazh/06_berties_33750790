@@ -5,15 +5,15 @@ const mysql = require('mysql2');
 const app = express();
 const port = process.env.PORT || 8000;
 
-// views (for 6D)
+// Set EJS views (Lab 6d+)
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// middleware
+// Body parsing for forms
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// MySQL pool (6A–C)
+// MySQL connection pool (Lab 6abc)
 const db = mysql.createPool({
   host: 'localhost',
   user: 'berties_books_app',
@@ -25,13 +25,14 @@ const db = mysql.createPool({
 });
 global.db = db;
 
-// routes
+// Home page → menu (Lab 6d)
+app.get('/', (req, res) => res.render('index.ejs'));
+
+// /books routes (Lab 6abc/def)
 const booksRouter = require('./routes/books');
 app.use('/books', booksRouter);
 
-// simple home (helps the marker)
-app.get('/', (req, res) => {
-  res.send('<h1>Berties Books</h1><p><a href="/books/list">Books list</a></p>');
+// Start server
+app.listen(port, () => {
+  console.log(`Server running on http://localhost:${port}`);
 });
-
-app.listen(port, () => console.log(`http://localhost:${port}`));
