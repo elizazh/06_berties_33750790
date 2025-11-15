@@ -1,0 +1,19 @@
+06_berties_33750790/
+  index.js
+  package.json
+  routes/
+    books.js
+  views/
+    index.ejs
+    list.ejs
+    addbook.ejs
+    search.ejs
+    partials/
+      header.ejs
+      footer.ejs
+  public/
+    style.css
+  create_db.sql
+  insert_test_data.sql
+  README.md
+  links.txt
