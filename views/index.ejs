@@ -1,12 +1,11 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><title>Welcome to Bertie’s Books</title></head>
-<body>
-  <h1>Welcome to Bertie’s Books</h1>
-  <ul>
-    <li><a href="/about">About Bertie’s Books</a></li>
-    <li><a href="/search">Search for books</a></li>
-    <li><a href="/register">Register with us</a></li>
+<%- include('partials/header', { title: 'Home' }) %>
+<section>
+  <h2>Welcome to <%= siteName %></h2>
+  <ul class="menu">
+    <li><a href="/books/list">List all books</a></li>
     <li><a href="/books/addbook">Add a new book</a></li>
-    <li><a href="/books/list">List books</a></li>
-    <li><a href="/books/bargainbooks">View bargain books</a></li>
+    <li><a href="/books/bargainbooks">Bargain books (&lt; £20)</a></li>
+    <li><a href="/books/search">Search by title</a></li>
   </ul>
-</body></html>
+</section>
+<%- include('partials/footer') %>
