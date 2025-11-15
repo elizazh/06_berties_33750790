@@ -1,17 +1,15 @@
 <%- include('partials/header') %>
-<h1>Berties Book Shop</h1>
-
-<table>
-  <thead>
-    <tr><th>Title</th><th>Price (£)</th></tr>
-  </thead>
-  <tbody>
-  <% (availableBooks || []).forEach(b => { %>
-    <tr>
-      <td><%= b.name %></td>
-      <td><%= Number(b.price).toFixed(2) %></td>
-    </tr>
-  <% }) %>
-  </tbody>
-</table>
+  <h2>Book list</h2>
+  <table class="table">
+    <thead><tr><th>Title</th><th>Price (£)</th></tr></thead>
+    <tbody>
+      <% if (availableBooks && availableBooks.length) { %>
+        <% availableBooks.forEach(b => { %>
+          <tr><td><%= b.name %></td><td><%= Number(b.price).toFixed(2) %></td></tr>
+        <% }) %>
+      <% } else { %>
+        <tr><td colspan="2">No results.</td></tr>
+      <% } %>
+    </tbody>
+  </table>
 <%- include('partials/footer') %>
