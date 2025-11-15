@@ -1,22 +1,17 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>Books</title>
-</head>
-<body>
-  <h2>Books</h2>
+<%- include('partials/header') %>
+<h1>Berties Book Shop</h1>
 
-  <% if (!availableBooks || !availableBooks.length) { %>
-    <p>No books found.</p>
-  <% } else { %>
-    <ul>
-      <% availableBooks.forEach(b => { %>
-        <li><strong><%= b.name %></strong> — £<%= Number(b.price).toFixed(2) %></li>
-      <% }) %>
-    </ul>
-  <% } %>
-
-  <p><a href="/">Home</a></p>
-</body>
-</html>
+<table>
+  <thead>
+    <tr><th>Title</th><th>Price (£)</th></tr>
+  </thead>
+  <tbody>
+  <% (availableBooks || []).forEach(b => { %>
+    <tr>
+      <td><%= b.name %></td>
+      <td><%= Number(b.price).toFixed(2) %></td>
+    </tr>
+  <% }) %>
+  </tbody>
+</table>
+<%- include('partials/footer') %>
