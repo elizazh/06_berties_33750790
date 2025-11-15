@@ -1,8 +1,25 @@
-<%- include('partials/header') %>
-<h1>Welcome to Bertie’s Books</h1>
-<p>Browse the list, add a new title, or try a quick search.</p>
-<p>
-  <a class="btn" href="/books/list">View books</a>
-  <a class="btn" href="/books/addbook">Add book</a>
-</p>
-<%- include('partials/footer') %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Berties Books - Home</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <h1>Berties Book Shop</h1>
+    <p>Welcome to your Dynamic Web Applications Lab 6 app.</p>
+  </header>
+
+  <main>
+    <nav class="nav">
+      <ul>
+        <li><a href="/books/list">View all books</a></li>
+        <li><a href="/books/addbook">Add a new book</a></li>
+        <li><a href="/books/bargainbooks">View bargain books (under £20)</a></li>
+        <li><a href="/books/search">Search for a book</a></li>
+      </ul>
+    </nav>
+  </main>
+</body>
+</html>
