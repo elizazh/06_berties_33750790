@@ -1,3 +1,4 @@
+// index.js (app bootstrap)
 const express = require('express');
 const path = require('path');
 const mysql = require('mysql2');
@@ -5,13 +6,13 @@ const mysql = require('mysql2');
 const app = express();
 const port = process.env.PORT || 8000;
 
-/* --- View engine + body parsing --- */
+/* view engine + body parsing */
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-/* --- MySQL pool --- */
+/* MySQL pool (least-privilege user) */
 const db = mysql.createPool({
   host: 'localhost',
   user: 'berties_books_app',
@@ -23,21 +24,24 @@ const db = mysql.createPool({
 });
 global.db = db;
 
-/* --- Static pages (to match the menu screenshot) --- */
-app.get('/',       (req, res) => res.render('index.ejs'));
-app.get('/about',  (req, res) => res.render('about.ejs'));
-app.get('/search', (req, res) => res.render('search.ejs'));
-app.get('/register',(req,res) => res.render('register.ejs'));
+/* top-level pages to match the menu */
+app.get('/', (_req, res) => res.render('index.ejs'));
+app.get('/about', (_req, res) => res.render('about.ejs'));
+app.get('/search', (_req, res) => res.render('search.ejs'));
+app.get('/register', (_req, res) => res.render('register.ejs'));
 
-/* --- Books router --- */
+/* books router mounted once at /books */
 const booksRouter = require('./routes/books');
 app.use('/books', booksRouter);
 
-/* --- (nice) basic error handlers --- */
-app.use((req,res)=>res.status(404).send('404 Not Found'));
-app.use((err,req,res,next)=>{ console.error(err); res.status(500).send('Server error'); });
+/* simple 404/500 */
+app.use((_req, res) => res.status(404).send('404 Not Found'));
+app.use((err, _req, res, _next) => {
+  console.error(err);
+  res.status(500).send('Server error');
+});
 
-/* --- Start server (bind all interfaces) --- */
+/* bind to all interfaces for the DOC gateway */
 app.listen(port, '0.0.0.0', () => {
   console.log(`Server running on http://localhost:${port}`);
 });
