@@ -2,23 +2,32 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title><%= title || 'Book Added' %></title>
+  <title>Berties Book Shop – Add Book</title>
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
   <header class="site-header">
     <h1>Berties Book Shop</h1>
-    <p>Book successfully added</p>
+    <p>Add a new book to the database</p>
   </header>
 
   <main>
-    <p>
-      This book has been added to the database:<br>
-      <strong>Name:</strong> <%= book.name %><br>
-      <strong>Price:</strong> £<%= book.price %>
-    </p>
+    <form action="/books/bookadded" method="post">
+      <div>
+        <label for="name">Book title:</label>
+        <input type="text" id="name" name="name" required>
+      </div>
 
-    <p><a href="/books/list">View all books</a></p>
+      <div>
+        <label for="price">Price (£):</label>
+        <input type="number" id="price" name="price" step="0.01" min="0" required>
+      </div>
+
+      <div>
+        <button type="submit">Add book</button>
+      </div>
+    </form>
+
     <p><a href="/">Back to home</a></p>
   </main>
 </body>
