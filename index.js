@@ -7,6 +7,15 @@ const mysql = require('mysql2');
 
 const app = express();
 
+// ---------- Ensure 'active' is always defined for EJS ----------
+app.use((req, res, next) => {
+  // give every view a default 'active' so header.ejs never crashes
+  if (typeof res.locals.active === 'undefined') {
+    res.locals.active = '';
+  }
+  next();
+});
+
 // ---------- Database connection ----------
 const db = mysql.createPool({
   host: 'localhost',
@@ -34,7 +43,7 @@ app.use('/books', booksRouter);
 
 // Home page
 app.get('/', (req, res) => {
-  res.render('index');
+  res.render('index'); // header.ejs can safely use 'active'
 });
 
 // Optional shortcut to list
