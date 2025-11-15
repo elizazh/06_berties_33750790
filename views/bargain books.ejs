@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title || 'Bargain Books' %></title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <h1>Berties Book Shop</h1>
+    <p>Bargain books (priced under £20)</p>
+  </header>
+
+  <main>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Book title</th>
+          <th>Price (£)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (bargainBooks && bargainBooks.length > 0) { %>
+          <% bargainBooks.forEach(function (book) { %>
+            <tr>
+              <td><%= book.id %></td>
+              <td><%= book.name %></td>
+              <td><%= book.price %></td>
+            </tr>
+          <% }); %>
+        <% } else { %>
+          <tr>
+            <td colspan="3">No bargain books found (no books under £20).</td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+
+    <p><a href="/">Back to home</a></p>
+  </main>
+</body>
+</html>
