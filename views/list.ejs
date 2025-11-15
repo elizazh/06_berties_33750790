@@ -1,21 +1,22 @@
-<%- include('partials/header', { title:'Books', active:'list' }) %>
-  <section class="card">
-    <h1>Books</h1>
-    <% if (!rows || rows.length===0) { %>
-      <div class="alert bad">No books in the catalogue yet.</div>
-    <% } else { %>
-      <table class="table">
-        <thead><tr><th>Title</th><th>Author</th><th>Price</th></tr></thead>
-        <tbody>
-          <% rows.forEach(b => { %>
-            <tr>
-              <td><%= b.title %></td>
-              <td><%= b.author %></td>
-              <td>£<%= Number(b.price).toFixed(2) %></td>
-            </tr>
-          <% }) %>
-        </tbody>
-      </table>
-    <% } %>
-  </section>
-<%- include('partials/footer') %>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Books</title>
+</head>
+<body>
+  <h2>Books</h2>
+
+  <% if (!availableBooks || !availableBooks.length) { %>
+    <p>No books found.</p>
+  <% } else { %>
+    <ul>
+      <% availableBooks.forEach(b => { %>
+        <li><strong><%= b.name %></strong> — £<%= Number(b.price).toFixed(2) %></li>
+      <% }) %>
+    </ul>
+  <% } %>
+
+  <p><a href="/">Home</a></p>
+</body>
+</html>
