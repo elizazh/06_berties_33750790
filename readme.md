@@ -27,3 +27,15 @@ Implements core Lab 6 features:
 - **CSS:** `/public/style.css`
 
 ---
+# 1) Create DB + sample data
+mysql -u root -p < create_db.sql
+mysql -u root -p berties < insert_test_data.sql
+
+# 2) Start the app
+npm install
+node index.js
+# 1) Create DB + sample data
+mysql -u root -p < create_db.sql
+mysql -u root -p berties < insert_test_data.sql
+
+http://localhost:8000/books/list
