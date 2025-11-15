@@ -19,7 +19,7 @@
           type="text"
           id="searchTerm"
           name="searchTerm"
-          value="<%= searchTerm %>"
+          value="<%= (typeof searchTerm !== 'undefined') ? searchTerm : '' %>"
           required
         >
       </div>
@@ -28,10 +28,10 @@
       </div>
     </form>
 
-    <% if (searchTerm && searchTerm.length > 0) { %>
+    <% if (typeof searchTerm !== 'undefined' && searchTerm.length > 0) { %>
       <h2>Search results for "<%= searchTerm %>"</h2>
 
-      <% if (searchResults && searchResults.length > 0) { %>
+      <% if (typeof searchResults !== 'undefined' && searchResults.length > 0) { %>
         <table>
           <thead>
             <tr>
