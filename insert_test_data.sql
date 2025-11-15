@@ -1,5 +1,4 @@
 -- insert_test_data.sql
-
 USE berties_books;
 
 INSERT INTO books (name, price) VALUES
