@@ -1,50 +1,48 @@
 const express = require('express');
 const router = express.Router();
 
-// /books -> /books/list
+// /books -> /books/list (prevents "Cannot GET /books")
 router.get('/', (req, res) => res.redirect('/books/list'));
 
-// List all books
+// list all
 router.get('/list', (req, res, next) => {
-  db.query('SELECT * FROM books', (err, rows) =>
+  req.db.query('SELECT * FROM books', (err, rows) =>
     err ? next(err) : res.render('list', { availableBooks: rows })
   );
 });
 
-// Add book (form)
+// add form
 router.get('/addbook', (req, res) => res.render('addbook'));
 
-// Add book (submit)
+// add submit
 router.post('/bookadded', (req, res, next) => {
   const { name, price } = req.body;
-  db.query('INSERT INTO books (name, price) VALUES (?, ?)', [name, price], err =>
-    err ? next(err) : res.send(`This book is added to database, name: ${name} price ${price}`)
+  req.db.query('INSERT INTO books (name, price) VALUES (?, ?)', [name, price], err =>
+    err ? next(err) : res.redirect('/books/list')
   );
 });
 
-// EXTRA: bargain books (< £20)
+// bargains
 router.get('/bargainbooks', (req, res, next) => {
-  db.query('SELECT * FROM books WHERE price < 20', (err, rows) =>
+  req.db.query('SELECT * FROM books WHERE price < 20', (err, rows) =>
     err ? next(err) : res.render('list', { availableBooks: rows })
   );
 });
 
-// Search page (exact + advanced forms)
+// search (advanced LIKE)
 router.get('/search', (req, res) => res.render('search'));
-
-// Exact search
-router.get('/searchexact', (req, res, next) => {
-  const title = (req.query.title || '').trim();
-  if (!title) return res.render('list', { availableBooks: [] });
-  db.query('SELECT * FROM books WHERE name = ?', [title], (err, rows) =>
+router.get('/searchresult', (req, res, next) => {
+  const k = req.query.keyword || '';
+  req.db.query('SELECT * FROM books WHERE name LIKE ?', [`%${k}%`], (err, rows) =>
     err ? next(err) : res.render('list', { availableBooks: rows })
   );
 });
 
-// Advanced search (LIKE)
-router.get('/searchresult', (req, res, next) => {
-  const keyword = (req.query.keyword || '').trim();
-  db.query('SELECT * FROM books WHERE name LIKE ?', [`%${keyword}%`], (err, rows) =>
+// (optional exact to match link)
+router.get('/searchexact', (req, res) => res.render('search'));
+router.get('/searchexactresult', (req, res, next) => {
+  const k = req.query.keyword || '';
+  req.db.query('SELECT * FROM books WHERE name = ?', [k], (err, rows) =>
     err ? next(err) : res.render('list', { availableBooks: rows })
   );
 });
