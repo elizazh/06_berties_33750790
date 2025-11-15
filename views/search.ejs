@@ -1,34 +1,21 @@
-<%- include('partials/header', { title:'Search', active:'search' }) %>
-  <section class="card">
-    <h1>Search</h1>
-    <form method="GET" action="/search">
-      <div>
-        <label for="q">Title contains</label>
-        <input id="q" name="q" type="text" value="<%= q || '' %>" />
-      </div>
-      <div class="actions">
-        <button class="btn primary" type="submit">Search</button>
-      </div>
-    </form>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Search</title>
+</head>
+<body>
+  <h2>Search books</h2>
 
-    <% if (typeof results !== 'undefined') { %>
-      <h2 style="margin-top:10px">Results</h2>
-      <% if (!results.length) { %>
-        <div class="alert bad">No matches.</div>
-      <% } else { %>
-        <table class="table">
-          <thead><tr><th>Title</th><th>Author</th><th>Price</th></tr></thead>
-          <tbody>
-            <% results.forEach(r => { %>
-              <tr>
-                <td><%= r.title %></td>
-                <td><%= r.author %></td>
-                <td>£<%= Number(r.price).toFixed(2) %></td>
-              </tr>
-            <% }) %>
-          </tbody>
-        </table>
-      <% } %>
-    <% } %>
-  </section>
-<%- include('partials/footer') %>
+  <form action="/books/searchresult" method="GET">
+    <p>
+      <label>Title contains<br>
+        <input name="keyword" placeholder="e.g. World" required>
+      </label>
+    </p>
+    <p><button type="submit">Search</button></p>
+  </form>
+
+  <p><a href="/">Home</a></p>
+</body>
+</html>
