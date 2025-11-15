@@ -3,17 +3,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Bertie’s Books</title>
+  <title><%= typeof title !== 'undefined' ? (title + ' | ') : '' %>Bertie’s Books</title>
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
 <header class="site-header">
+  <div class="brand">Bertie’s Books</div>
   <nav class="nav">
-    <a href="/">Home</a>
-    <a href="/books/list">Books</a>
-    <a href="/books/addbook">Add book</a>
-    <a href="/books/bargainbooks">Bargains</a>
-    <a href="/books/searchexact">Search (exact)</a>
-    <a href="/books/search">Search (advanced)</a>
+    <a href="/"              class="<%= active==='home'  ? 'active' : '' %>">Home</a>
+    <a href="/books/list"    class="<%= active==='list'  ? 'active' : '' %>">Books</a>
+    <a href="/books/addbook" class="<%= active==='add'   ? 'active' : '' %>">Add book</a>
+    <a href="/books/search"  class="<%= active==='search'? 'active' : '' %>">Search</a>
   </nav>
 </header>
+<main class="container">
