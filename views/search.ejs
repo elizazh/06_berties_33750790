@@ -1,17 +1,19 @@
 <%- include('partials/header') %>
-<h2>Search</h2>
+  <h2>Search</h2>
 
-<h3>Exact title</h3>
-<form method="get" action="/books/searchexact">
-  <label for="name">Title:</label>
-  <input id="name" name="name" required>
-  <button type="submit">Search (exact)</button>
-</form>
+  <section class="card">
+    <h3>Exact title</h3>
+    <form method="get" action="/books/searchexact" class="form">
+      <label>Title <input name="title" required></label>
+      <button class="btn" type="submit">Search (exact)</button>
+    </form>
+  </section>
 
-<h3>Advanced (partial match)</h3>
-<form method="get" action="/books/searchresult">
-  <label for="keyword">Keyword:</label>
-  <input id="keyword" name="keyword" required>
-  <button type="submit">Search (advanced)</button>
-</form>
+  <section class="card">
+    <h3>Advanced (partial match)</h3>
+    <form method="get" action="/books/searchresult" class="form">
+      <label>Keyword <input name="keyword" required></label>
+      <button class="btn" type="submit">Search (advanced)</button>
+    </form>
+  </section>
 <%- include('partials/footer') %>
