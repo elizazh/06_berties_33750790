@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"><title>Search</title></head>
-<body>
-  <h2>Search for books</h2>
-  <form action="/books/search-adv" method="get">
-    <label>Keyword:
-      <input type="text" name="keyword" placeholder="e.g. world" required>
-    </label>
-    <button type="submit">Search</button>
-  </form>
-  <p><a href="/">Back to home</a></p>
-</body></html>
+<%- include('partials/header', { title: 'Search' }) %>
+<h2>Search Books</h2>
+<form class="form" action="/books/searchresult" method="GET">
+  <label>Keyword</label>
+  <input name="keyword" placeholder="e.g., World" required>
+  <button type="submit">Search</button>
+</form>
+<%- include('partials/footer') %>
