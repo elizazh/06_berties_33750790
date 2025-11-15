@@ -1,19 +1,61 @@
-<%- include('partials/header') %>
-  <h2>Search</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title || 'Search Books' %></title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <h1>Berties Book Shop</h1>
+    <p>Search for books by title</p>
+  </header>
 
-  <section class="card">
-    <h3>Exact title</h3>
-    <form method="get" action="/books/searchexact" class="form">
-      <label>Title <input name="title" required></label>
-      <button class="btn" type="submit">Search (exact)</button>
+  <main>
+    <form action="/books/search" method="post">
+      <div>
+        <label for="searchTerm">Book title keyword:</label>
+        <input
+          type="text"
+          id="searchTerm"
+          name="searchTerm"
+          value="<%= searchTerm %>"
+          required
+        >
+      </div>
+      <div>
+        <button type="submit">Search</button>
+      </div>
     </form>
-  </section>
 
-  <section class="card">
-    <h3>Advanced (partial match)</h3>
-    <form method="get" action="/books/searchresult" class="form">
-      <label>Keyword <input name="keyword" required></label>
-      <button class="btn" type="submit">Search (advanced)</button>
-    </form>
-  </section>
-<%- include('partials/footer') %>
+    <% if (searchTerm && searchTerm.length > 0) { %>
+      <h2>Search results for "<%= searchTerm %>"</h2>
+
+      <% if (searchResults && searchResults.length > 0) { %>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Book title</th>
+              <th>Price (£)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% searchResults.forEach(function (book) { %>
+              <tr>
+                <td><%= book.id %></td>
+                <td><%= book.name %></td>
+                <td><%= book.price %></td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      <% } else { %>
+        <p>No books found matching that search term.</p>
+      <% } %>
+    <% } %>
+
+    <p><a href="/">Back to home</a></p>
+  </main>
+</body>
+</html>
