@@ -1,34 +1,39 @@
+// routes/books.js
 const express = require('express');
 const router = express.Router();
 
-// 6A–C: LIST (rendered in 6d)
+// use the pool created in index.js
+const db = global.db;
+
+// /books/list  -> table view
 router.get('/list', (req, res, next) => {
-  db.query('SELECT * FROM books', (err, rows) => {
+  db.query('SELECT id, name, price FROM books ORDER BY id', (err, rows) => {
     if (err) return next(err);
     res.render('list.ejs', { availableBooks: rows });
   });
 });
 
-// 6D: ADD BOOK (form + insert)
-router.get('/addbook', (req, res) => res.render('addbook.ejs'));
-
-router.post('/bookadded', (req, res, next) => {
-  const sql = 'INSERT INTO books (name, price) VALUES (?, ?)';
-  db.query(sql, [req.body.name, req.body.price], (err) => {
-    if (err) return next(err);
-    res.send('This book is added to database, name: ' + req.body.name + ' price ' + req.body.price);
-  });
-});
-
-// 6E: BARGAIN BOOKS (< £20)
+// /books/bargainbooks  -> price < 20
 router.get('/bargainbooks', (req, res, next) => {
-  db.query('SELECT name, price FROM books WHERE price < 20', (err, rows) => {
+  db.query('SELECT id, name, price FROM books WHERE price < 20 ORDER BY price ASC', (err, rows) => {
     if (err) return next(err);
     res.render('list.ejs', { availableBooks: rows });
   });
 });
 
-// 6E: SEARCH (exact)
+// add form
+router.get('/addbook', (_req, res) => res.render('addbook.ejs'));
+
+// handle add
+router.post('/bookadded', (req, res, next) => {
+  const { name, price } = req.body;
+  db.query('INSERT INTO books (name, price) VALUES (?, ?)', [name, price], (err) => {
+    if (err) return next(err);
+    res.redirect('/books/list');
+  });
+});
+
+// exact search
 router.get('/search', (req, res, next) => {
   const { keyword } = req.query;
   db.query('SELECT name, price FROM books WHERE name = ?', [keyword], (err, rows) => {
@@ -37,10 +42,11 @@ router.get('/search', (req, res, next) => {
   });
 });
 
-// 6E: SEARCH (advanced: partial + case-insensitive)
+// advanced (case-insensitive, partial)
 router.get('/search-adv', (req, res, next) => {
   const keyword = (req.query.keyword || '').trim();
-  const sql = "SELECT name, price FROM books WHERE LOWER(name) LIKE LOWER(CONCAT('%', ?, '%'))";
+  const sql =
+    'SELECT name, price FROM books WHERE LOWER(name) LIKE LOWER(CONCAT("%", ?, "%"))';
   db.query(sql, [keyword], (err, rows) => {
     if (err) return next(err);
     res.render('list.ejs', { availableBooks: rows });
