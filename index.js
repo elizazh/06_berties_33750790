@@ -7,9 +7,7 @@ const mysql = require('mysql2');
 
 const app = express();
 
-// ----------------------
-// Database connection pool
-// ----------------------
+// ---------- Database connection ----------
 const db = mysql.createPool({
   host: 'localhost',
   user: 'berties_books_app',
@@ -20,21 +18,17 @@ const db = mysql.createPool({
   queueLimit: 0
 });
 
-// Make the pool available everywhere as global.db
+// make pool global for routes
 global.db = db;
 
-// ----------------------
-// View engine & middleware
-// ----------------------
+// ---------- View engine & middleware ----------
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-app.use(express.urlencoded({ extended: true })); // for POST form data
-app.use(express.static(path.join(__dirname, 'public'))); // css, images, etc.
+app.use(express.urlencoded({ extended: true })); // form POSTs
+app.use(express.static(path.join(__dirname, 'public'))); // css, etc.
 
-// ----------------------
-// Routes
-// ----------------------
+// ---------- Routes ----------
 const booksRouter = require('./routes/books');
 app.use('/books', booksRouter);
 
@@ -43,21 +37,17 @@ app.get('/', (req, res) => {
   res.render('index');
 });
 
-// Optional: /list shortcut used in some lab docs – just redirect to /books/list
+// Optional shortcut to list
 app.get('/list', (req, res) => {
   res.redirect('/books/list');
 });
 
-// Basic error handler (so next(err) doesn't crash the app without message)
-app.use(function (err, req, res, next) {
+// Basic error handler
+app.use((err, req, res, next) => {
   console.error(err);
-  res.status(500);
-  res.send('Something went wrong with the server or database.');
+  res.status(500).send('Server or database error.');
 });
 
-// ----------------------
-// Start server
-// ----------------------
 const port = process.env.PORT || 8000;
 app.listen(port, () => {
   console.log(`Berties Books app listening on port ${port}`);
