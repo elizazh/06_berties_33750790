@@ -1,11 +1,10 @@
-<%- include('partials/header', { title: 'Home' }) %>
-<section>
-  <h2>Welcome to <%= siteName %></h2>
-  <ul class="menu">
-    <li><a href="/books/list">List all books</a></li>
-    <li><a href="/books/addbook">Add a new book</a></li>
-    <li><a href="/books/bargainbooks">Bargain books (&lt; £20)</a></li>
-    <li><a href="/books/search">Search by title</a></li>
-  </ul>
-</section>
+<%- include('partials/header', { title: 'Home', active:'home', shopName: 'Bertie’s Books' }) %>
+  <section class="card">
+    <h1>Welcome to Bertie’s Books</h1>
+    <p class="muted">Browse the list, add a new title, or try a quick search.</p>
+    <div class="actions">
+      <a class="btn primary" href="/books">View books</a>
+      <a class="btn ghost" href="/books/add">Add book</a>
+    </div>
+  </section>
 <%- include('partials/footer') %>
