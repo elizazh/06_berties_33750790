@@ -1,35 +1,66 @@
+// index.js
+// Main entry point for Berties Books
+
 const express = require('express');
 const path = require('path');
-const mysql = require('mysql'); // matches your package.json
+const mysql = require('mysql2');
+
 const app = express();
-const PORT = 8000;
 
-// views + static + forms
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static('public'));
-
-// DB connection
-const db = mysql.createConnection({
+// ----------------------
+// Database connection pool
+// ----------------------
+const db = mysql.createPool({
   host: 'localhost',
   user: 'berties_books_app',
   password: 'qwertyuiop',
-  database: 'berties_books'
+  database: 'berties_books',
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
 });
-db.connect(err => { if (err) console.error('DB connect error:', err); });
 
-// make db available to routers
-app.use((req, res, next) => { req.db = db; next(); });
+// Make the pool available everywhere as global.db
+global.db = db;
 
-// home page
-app.get('/', (req, res) => res.render('index'));
+// ----------------------
+// View engine & middleware
+// ----------------------
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
 
-// mount books router
+app.use(express.urlencoded({ extended: true })); // for POST form data
+app.use(express.static(path.join(__dirname, 'public'))); // css, images, etc.
+
+// ----------------------
+// Routes
+// ----------------------
 const booksRouter = require('./routes/books');
 app.use('/books', booksRouter);
 
-// 404 (optional)
-app.use((req, res) => res.status(404).send('Not found'));
+// Home page
+app.get('/', (req, res) => {
+  res.render('index');
+});
 
-app.listen(PORT, () => console.log(`Bertie’s Books on ${PORT}`));
+// Optional: /list shortcut used in some lab docs – just redirect to /books/list
+app.get('/list', (req, res) => {
+  res.redirect('/books/list');
+});
+
+// Basic error handler (so next(err) doesn't crash the app without message)
+app.use(function (err, req, res, next) {
+  console.error(err);
+  res.status(500);
+  res.send('Something went wrong with the server or database.');
+});
+
+// ----------------------
+// Start server
+// ----------------------
+const port = process.env.PORT || 8000;
+app.listen(port, () => {
+  console.log(`Berties Books app listening on port ${port}`);
+});
+
+module.exports = app;
