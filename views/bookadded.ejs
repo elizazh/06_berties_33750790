@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title || 'Book Added' %></title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <h1>Berties Book Shop</h1>
+    <p>Book successfully added</p>
+  </header>
+
+  <main>
+    <p>
+      This book has been added to the database:<br>
+      <strong>Name:</strong> <%= book.name %><br>
+      <strong>Price:</strong> £<%= book.price %>
+    </p>
+
+    <p><a href="/books/list">View all books</a></p>
+    <p><a href="/">Back to home</a></p>
+  </main>
+</body>
+</html>
