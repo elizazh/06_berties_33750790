@@ -1,80 +1,104 @@
-/* Pink & Girly theme — drop-in stylesheet */
-/* Font */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
-
+/* --------- Bertie's Books minimal pro theme --------- */
 :root{
-  --pink-50:#fff5fa; --pink-100:#ffe7f2; --pink-200:#ffcfe6; --pink-300:#ffb3d8;
-  --pink-400:#ff8fc5; --pink-500:#ff69b4; --pink-600:#e64fa0; --pink-700:#c43f86;
-  --ink:#3a2031; --ring: rgba(255,105,180,.45);
+  --bg:#f6f7fb;
+  --card:#ffffff;
+  --ink:#111827;
+  --muted:#6b7280;
+  --brand:#1f6feb;
+  --line:#e5e7eb;
+  --shadow:0 8px 30px rgba(0,0,0,.06);
 }
 
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
+html,body{height:100%}
 body{
   margin:0;
-  font-family:'Poppins',system-ui,-apple-system,Segoe UI,Arial,sans-serif;
+  background:var(--bg);
   color:var(--ink);
-  background: radial-gradient(1200px 600px at 20% 0%, var(--pink-100), transparent 70%),
-              radial-gradient(1200px 600px at 80% 0%, var(--pink-50), transparent 70%),
-              linear-gradient(#fff, var(--pink-50));
-  min-height:100vh;
+  font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Arial,sans-serif;
 }
 
-/* Layout */
-.container{max-width:980px;margin:0 auto;padding:24px}
+/* page wrapper if you have one */
+main,.container{
+  max-width:960px;
+  margin:40px auto;
+  padding:0 20px;
+}
+
+/* headings */
+h1{font-size:2.2rem; margin:0 0 1rem; letter-spacing:.2px}
+h2{font-size:1.4rem; margin:1.2rem 0 .75rem;}
+
+/* Make home links look like cards */
+main ul, .links{list-style:none; padding:0; margin:16px 0; display:grid; gap:12px}
+main li a, .links a{
+  display:block;
+  padding:14px 16px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:var(--card);
+  text-decoration:none;
+  color:var(--ink);
+  box-shadow:var(--shadow);
+  transition:transform .06s ease, box-shadow .2s ease, border-color .2s ease;
+}
+main li a:hover, .links a:hover{
+  transform:translateY(-1px);
+  border-color:#d1d5db;
+}
+
+/* Top helper nav some pages print (Home | Add book | …) */
+a{color:var(--brand); text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* cards for any content blocks */
 .card{
-  background:#fff;border:1px solid var(--pink-200);border-radius:16px;
-  padding:20px;box-shadow:0 12px 32px rgba(255,105,180,.15)
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:18px;
+  box-shadow:var(--shadow);
+  margin:14px 0;
 }
 
-/* Header + nav pills */
-.site-header{
-  position:sticky;top:0;background:rgba(255,255,255,.8);backdrop-filter:blur(10px);
-  border-bottom:1px solid var(--pink-200); z-index:10
+/* tables */
+table{
+  width:100%;
+  border-collapse:separate;
+  border-spacing:0;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:var(--shadow);
 }
-.logo{margin:0;font-size:28px;letter-spacing:.3px}
-.logo a{color:var(--pink-700);text-decoration:none}
-.nav{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-.nav a{
-  text-decoration:none;color:#fff;background:var(--pink-500);
-  padding:8px 14px;border-radius:999px;font-weight:600;
-  box-shadow:0 6px 14px rgba(255,105,180,.25);
+thead th{
+  text-align:left;
+  font-weight:600;
+  color:var(--muted);
+  background:#fafafa;
+  border-bottom:1px solid var(--line);
+  padding:12px 14px;
 }
-.nav a:hover{background:var(--pink-600);transform:translateY(-1px)}
-.nav a:active{transform:translateY(0)}
+tbody td{
+  padding:12px 14px;
+  border-top:1px solid var(--line);
+}
+tbody tr:hover{background:#fafafa}
 
-/* Headings & links */
-h1,h2,h3{color:var(--pink-700)}
-a{color:var(--pink-700)}
-a:hover{color:var(--pink-600)}
-
-/* Tables */
-table{width:100%;border-collapse:collapse;margin:14px 0;background:#fff;
-  border:1px solid var(--pink-200);border-radius:12px;overflow:hidden}
-th,td{padding:12px 14px;border-bottom:1px solid var(--pink-100);text-align:left}
-th{background:var(--pink-100);text-transform:uppercase;font-size:12px;letter-spacing:.04em}
-tr:hover{background:var(--pink-50)}
-
-/* Forms */
-label{font-weight:600}
-input,select,textarea{
-  width:min(520px,100%);padding:10px 12px;border:1.5px solid var(--pink-200);
-  border-radius:10px;background:#fff;outline:none;transition:.15s;
-  font-family:inherit
+/* forms */
+form{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:18px; box-shadow:var(--shadow)}
+label{display:block; font-weight:600; margin:.6rem 0 .25rem}
+input[type="text"], input[type="number"], input[type="email"], select{
+  width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:8px; outline:none;
 }
-input:focus,select:focus,textarea:focus{
-  border-color:var(--pink-500); box-shadow:0 0 0 4px var(--ring)
+input:focus, select:focus{border-color:#cbd5e1; box-shadow:0 0 0 4px rgba(31,111,235,.08)}
+button, input[type="submit"], .btn{
+  display:inline-block; padding:10px 14px; border-radius:8px; border:1px solid #1f6feb;
+  background:#1f6feb; color:#fff; font-weight:600; cursor:pointer;
 }
-input[type="submit"], button, .btn{
-  appearance:none;border:0;border-radius:12px;padding:10px 16px;font-weight:700;
-  background:linear-gradient(180deg,var(--pink-500),var(--pink-600)); color:#fff;
-  cursor:pointer; box-shadow:0 10px 22px rgba(255,105,180,.28)
-}
-input[type="submit"]:hover, button:hover, .btn:hover{filter:brightness(1.05)}
-input[type="submit"]:active, button:active, .btn:active{transform:translateY(1px)}
+button:hover, input[type="submit"]:hover{filter:brightness(1.05)}
+.small{color:var(--muted); font-size:.9rem}
 
-/* Utility */
-.center{display:flex;justify-content:center;align-items:center}
-.notice{background:var(--pink-100);border:1px dashed var(--pink-300);
-  padding:10px 12px;border-radius:10px}
-footer.site-footer{padding:30px 0;color:#a26f8e;text-align:center}
+/* footer (if present) */
+.site-footer{color:var(--muted); font-size:.9rem; text-align:center; padding:28px 0}
