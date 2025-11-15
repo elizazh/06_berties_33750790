@@ -1,46 +1,41 @@
-// Let /books land on the list page
-router.get('/', (req, res) => res.redirect('/books/list'));
 const express = require('express');
 const router = express.Router();
+const db = global.db; // mysql2 pool created in index.js
 
-/* List all books (Part D Task 2 – render nicely) */
+// /books -> /books/list
+router.get('/', (req, res) => res.redirect('/books/list'));
+
+// LIST
 router.get('/list', (req, res, next) => {
-  const sql = 'SELECT * FROM books';
-  db.query(sql, (err, result) =>
-    err ? next(err) : res.render('list', { availableBooks: result })
+  db.query('SELECT * FROM books', (err, rows) =>
+    err ? next(err) : res.render('list', { availableBooks: rows })
   );
 });
 
-/* Add Book (Part D Task 3) */
+// ADD BOOK (form + submit)
 router.get('/addbook', (req, res) => res.render('addbook'));
-
 router.post('/bookadded', (req, res, next) => {
-  const sql = 'INSERT INTO books (name, price) VALUES (?, ?)';
-  const params = [req.body.name, req.body.price];
-  db.query(sql, params, (err) => {
-    if (err) return next(err);
-    res.send(`This book is added to database, name: ${req.body.name} price ${req.body.price}`);
-  });
+  const { name = '', price = '' } = req.body;
+  db.query('INSERT INTO books (name, price) VALUES (?,?)', [name, price],
+    (err) => err ? next(err) : res.send(`This book is added to database, name: ${name} price ${price}`));
 });
 
-/* Extension: Bargain books (< £20) (Part E Task 1) */
+// BARGAINS (< £20)
 router.get('/bargainbooks', (req, res, next) => {
-  const sql = 'SELECT * FROM books WHERE price < 20';
-  db.query(sql, (err, result) =>
-    err ? next(err) : res.render('list', { availableBooks: result })
+  db.query('SELECT * FROM books WHERE price < 20', (err, rows) =>
+    err ? next(err) : res.render('list', { availableBooks: rows })
   );
 });
 
-/* Search (Part E Task 2): basic + advanced LIKE */
+// SEARCH PAGES (both show the same form to avoid 404s)
 router.get('/search', (req, res) => res.render('search'));
+router.get('/searchexact', (req, res) => res.render('search'));
 
+// SEARCH RESULT (advanced LIKE)
 router.get('/searchresult', (req, res, next) => {
-  const keyword = req.query.keyword || '';
-  // Advanced: partial match; satisfies the “update to advanced” instruction.
-  const sql = 'SELECT * FROM books WHERE name LIKE ?';
-  db.query(sql, [`%${keyword}%`], (err, result) =>
-    err ? next(err) : res.render('list', { availableBooks: result })
-  );
+  const keyword = req.query.keyword || req.query.title || '';
+  db.query('SELECT * FROM books WHERE name LIKE ?', [`%${keyword}%`],
+    (err, rows) => err ? next(err) : res.render('list', { availableBooks: rows }));
 });
 
 module.exports = router;
