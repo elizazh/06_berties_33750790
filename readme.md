@@ -34,8 +34,12 @@ mysql -u root -p berties < insert_test_data.sql
 # 2) Start the app
 npm install
 node index.js
-# 1) Create DB + sample data
-mysql -u root -p < create_db.sql
-mysql -u root -p berties < insert_test_data.sql
-
+Routes (server)
+	•	/ – Home
+	•	/about – About Bertie’s Books
+	•	/register (GET) → /registered (POST)
+	•	/books/list – List all books
+	•	/books/bargainbooks – Books under £20
+	•	/books/addbook (GET) → /books/bookadded (POST)
+	•	/books/search (GET) → /books/searchresult (POST)
 http://localhost:8000/books/list
