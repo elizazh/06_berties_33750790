@@ -1,7 +1,1 @@
 home=http://www.doc.gold.ac.uk/usr/417/
-about=http://www.doc.gold.ac.uk/usr/417/about
-books=http://www.doc.gold.ac.uk/usr/417/books
-bargains=http://www.doc.gold.ac.uk/usr/417/bargains
-search=http://www.doc.gold.ac.uk/usr/417/search
-register=http://www.doc.gold.ac.uk/usr/417/register
-addbook=http://www.doc.gold.ac.uk/usr/417/addbook
