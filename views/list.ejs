@@ -1,39 +1,19 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8"/>
-  <title>Berties Book Shop</title>
-  <style>
-    body { font-family: system-ui, Arial, sans-serif; margin: 2rem; }
-    table { border-collapse: collapse; width: 520px; }
-    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-    th { background: #f5f5f5; }
-    nav a { margin-right: 12px; }
-  </style>
-</head>
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Berties Book Shop</title>
+<style>table{border-collapse:collapse}td,th{border:1px solid #ddd;padding:6px}</style></head>
 <body>
   <h1>Berties Book Shop</h1>
   <nav>
-    <a href="/">Home</a>
-    <a href="/books/addbook">Add book</a>
-    <a href="/books/bargainbooks">Bargains</a>
-    <a href="/books/search?keyword=Brighton%20Rock">Search (exact)</a>
+    <a href="/">Home</a> |
+    <a href="/books/addbook">Add book</a> |
+    <a href="/books/bargainbooks">Bargains</a> |
+    <a href="/books/search?keyword=Brighton%20Rock">Search (exact)</a> |
     <a href="/books/search-adv?keyword=world">Search (advanced)</a>
   </nav>
-  <table>
-    <thead><tr><th>Title</th><th>Price (£)</th></tr></thead>
+  <table><thead><tr><th>Title</th><th>Price (£)</th></tr></thead>
     <tbody>
-      <% if (availableBooks && availableBooks.length) { %>
-        <% availableBooks.forEach(b => { %>
-          <tr>
-            <td><%= b.name %></td>
-            <td><%= Number(b.price).toFixed(2) %></td>
-          </tr>
-        <% }) %>
-      <% } else { %>
-        <tr><td colspan="2">No results.</td></tr>
-      <% } %>
+      <% if (availableBooks && availableBooks.length) { availableBooks.forEach(b => { %>
+        <tr><td><%= b.name %></td><td><%= Number(b.price).toFixed(2) %></td></tr>
+      <% }) } else { %><tr><td colspan="2">No results.</td></tr><% } %>
     </tbody>
   </table>
-</body>
-</html>
+</body></html>
