@@ -1,1 +1,9 @@
-home=http://www.doc.gold.ac.uk/usr/417/
+https://github.com/elizazh/06_berties_33750790
+http://www.doc.gold.ac.uk/usr/417/
+http://www.doc.gold.ac.uk/usr/417/books/list
+http://localhost:8000/
+http://localhost:8000/books/list
+http://localhost:8000/books/addbook
+http://localhost:8000/books/bargainbooks
+http://localhost:8000/books/searchexact
+http://localhost:8000/books/search
