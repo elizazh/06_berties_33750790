@@ -1,6 +1,1 @@
-home=http://www.doc.gold.ac.uk/usr/147/
-list=http://www.doc.gold.ac.uk/usr/147/books/list
-add=http://www.doc.gold.ac.uk/usr/147/books/addbook
-bargains=http://www.doc.gold.ac.uk/usr/147/books/bargainbooks
-search=http://www.doc.gold.ac.uk/usr/147/books/search?keyword=world
-search-adv=http://www.doc.gold.ac.uk/usr/147/books/search-adv?keyword=world
+home=http://www.doc.gold.ac.uk/usr/417/
