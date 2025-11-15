@@ -1,21 +1,17 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>Search</title>
-</head>
-<body>
-  <h2>Search books</h2>
+<%- include('partials/header') %>
+<h2>Search</h2>
 
-  <form action="/books/searchresult" method="GET">
-    <p>
-      <label>Title contains<br>
-        <input name="keyword" placeholder="e.g. World" required>
-      </label>
-    </p>
-    <p><button type="submit">Search</button></p>
-  </form>
+<h3>Exact title</h3>
+<form method="get" action="/books/searchexact">
+  <label for="name">Title:</label>
+  <input id="name" name="name" required>
+  <button type="submit">Search (exact)</button>
+</form>
 
-  <p><a href="/">Home</a></p>
-</body>
-</html>
+<h3>Advanced (partial match)</h3>
+<form method="get" action="/books/searchresult">
+  <label for="keyword">Keyword:</label>
+  <input id="keyword" name="keyword" required>
+  <button type="submit">Search (advanced)</button>
+</form>
+<%- include('partials/footer') %>
