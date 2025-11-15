@@ -1,11 +1,14 @@
 {
-  "name": "06_berties_33750790",
+  "name": "berties-books",
   "version": "1.0.0",
+  "description": "Lab 6 — Berties Books",
   "main": "index.js",
-  "scripts": { "start": "node index.js" },
+  "scripts": {
+    "start": "node index.js"
+  },
   "dependencies": {
-    "ejs": "^3.1.9",
+    "ejs": "^3.1.10",
     "express": "^4.19.2",
-    "mysql2": "^3.10.1"
+    "mysql2": "^3.9.8"
   }
 }
