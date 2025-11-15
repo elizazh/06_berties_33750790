@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title><%= typeof title !== 'undefined' ? title + ' — ' : '' %><%= siteName %></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="/style.css" rel="stylesheet">
+</head>
+<body>
+  <header class="site-header">
+    <h1><a href="/"><%= siteName %></a></h1>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/books/list">Books</a>
+      <a href="/books/addbook">Add Book</a>
+      <a href="/books/bargainbooks">Bargains</a>
+      <a href="/books/search">Search</a>
+    </nav>
+  </header>
+  <main class="container">
