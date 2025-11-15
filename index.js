@@ -1,34 +1,35 @@
 const express = require('express');
-const path = require('path');
-const mysql = require('mysql2');
+const mysql = require('mysql');
 
 const app = express();
-const port = process.env.PORT || 8000;
+const PORT = 8000;
 
-/* MySQL pool (Lab 6 A–C) */
-const db = mysql.createPool({
+// DB (MySQL/MariaDB)
+global.db = mysql.createConnection({
   host: 'localhost',
-  user: 'berties_books_app',
-  password: 'qwertyuiop',
-  database: 'berties_books',
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
+  user: 'root',
+  password: '',
+  database: 'berties'
 });
-global.db = db;
+db.connect(err => {
+  if (err) throw err;
+  console.log('MySQL connected');
+});
 
+// Express + EJS
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', __dirname + '/views');
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(__dirname + '/public'));
 
-/* Routes for Lab 6 */
+// Home
+app.get('/', (req, res) => res.render('index'));
+
+// Books routes
 const booksRouter = require('./routes/books');
 app.use('/books', booksRouter);
 
-/* Home page with links (Lab 6D Task 4) */
-app.get('/', (req, res) => res.render('index'));
+// 404 minimal
+app.use((req, res) => res.status(404).send('Not found'));
 
-app.listen(port, '0.0.0.0', () => {
-  console.log(`Bertie's Books listening on ${port}`);
-});
+app.listen(PORT, () => console.log(`Bertie’s Books on ${PORT}`));
