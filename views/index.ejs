@@ -1,16 +1,10 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>Bertie's Books</title>
-</head>
-<body>
-  <h1>Bertie's Books</h1>
-  <ul>
-    <li><a href="/books/list">List books</a></li>
-    <li><a href="/books/addbook">Add a book</a></li>
-    <li><a href="/books/bargainbooks">Bargain books</a></li>
-    <li><a href="/books/search">Search</a></li>
-  </ul>
-</body>
-</html>
+<%- include('partials/header') %>
+<main class="container">
+  <h1>Welcome to Bertie’s Books</h1>
+  <p>Browse the list, add a new title, or try a quick search.</p>
+  <p class="cta">
+    <a class="btn" href="/books/list">View books</a>
+    <a class="btn" href="/books/addbook">Add book</a>
+  </p>
+</main>
+<%- include('partials/footer') %>
