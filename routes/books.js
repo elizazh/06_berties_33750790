@@ -1,3 +1,5 @@
+// Let /books land on the list page
+router.get('/', (req, res) => res.redirect('/books/list'));
 const express = require('express');
 const router = express.Router();
 
