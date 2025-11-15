@@ -1,50 +1,101 @@
+// routes/books.js
+// All routes related to books
+
 const express = require('express');
 const router = express.Router();
 
-// /books -> /books/list (prevents "Cannot GET /books")
-router.get('/', (req, res) => res.redirect('/books/list'));
+// List all books
+router.get('/list', function (req, res, next) {
+  const sqlquery = 'SELECT * FROM books ORDER BY name ASC';
 
-// list all
-router.get('/list', (req, res, next) => {
-  req.db.query('SELECT * FROM books', (err, rows) =>
-    err ? next(err) : res.render('list', { availableBooks: rows })
-  );
+  db.query(sqlquery, (err, result) => {
+    if (err) {
+      return next(err);
+    }
+    res.render('list', {
+      title: 'All Books',
+      availableBooks: result
+    });
+  });
 });
 
-// add form
-router.get('/addbook', (req, res) => res.render('addbook'));
-
-// add submit
-router.post('/bookadded', (req, res, next) => {
-  const { name, price } = req.body;
-  req.db.query('INSERT INTO books (name, price) VALUES (?, ?)', [name, price], err =>
-    err ? next(err) : res.redirect('/books/list')
-  );
+// Show the "Add Book" form
+router.get('/addbook', function (req, res, next) {
+  res.render('addbook', {
+    title: 'Add a New Book'
+  });
 });
 
-// bargains
-router.get('/bargainbooks', (req, res, next) => {
-  req.db.query('SELECT * FROM books WHERE price < 20', (err, rows) =>
-    err ? next(err) : res.render('list', { availableBooks: rows })
-  );
+// Handle the Add Book form POST and confirm the book was added
+router.post('/bookadded', function (req, res, next) {
+  const name = req.body.name;
+  const price = req.body.price;
+
+  const sqlquery = 'INSERT INTO books (name, price) VALUES (?, ?)';
+  const newrecord = [name, price];
+
+  db.query(sqlquery, newrecord, (err, result) => {
+    if (err) {
+      return next(err);
+    }
+
+    // Render a confirmation page instead of plain text
+    res.render('bookadded', {
+      title: 'Book Added',
+      book: {
+        name: name,
+        price: price
+      }
+    });
+  });
 });
 
-// search (advanced LIKE)
-router.get('/search', (req, res) => res.render('search'));
-router.get('/searchresult', (req, res, next) => {
-  const k = req.query.keyword || '';
-  req.db.query('SELECT * FROM books WHERE name LIKE ?', [`%${k}%`], (err, rows) =>
-    err ? next(err) : res.render('list', { availableBooks: rows })
-  );
+// EXTRA: Bargain books (< £20)
+router.get('/bargainbooks', function (req, res, next) {
+  const sqlquery = 'SELECT * FROM books WHERE price < 20 ORDER BY price ASC';
+
+  db.query(sqlquery, (err, result) => {
+    if (err) {
+      return next(err);
+    }
+    res.render('bargainbooks', {
+      title: 'Bargain Books (Under £20)',
+      bargainBooks: result
+    });
+  });
 });
 
-// (optional exact to match link)
-router.get('/searchexact', (req, res) => res.render('search'));
-router.get('/searchexactresult', (req, res, next) => {
-  const k = req.query.keyword || '';
-  req.db.query('SELECT * FROM books WHERE name = ?', [k], (err, rows) =>
-    err ? next(err) : res.render('list', { availableBooks: rows })
-  );
+// EXTRA: Search functionality
+
+// Show the search form (GET)
+router.get('/search', function (req, res, next) {
+  res.render('search', {
+    title: 'Search Books',
+    searchTerm: '',
+    searchResults: []
+  });
+});
+
+// Handle the search form (POST)
+router.post('/search', function (req, res, next) {
+  const searchTerm = req.body.searchTerm || '';
+
+  // Advanced search using LIKE for partial matches
+  // Example: 'World' matches 'Brave New World', 'Atlas of the World'
+  const sqlquery = 'SELECT * FROM books WHERE name LIKE ? ORDER BY name ASC';
+  const likeTerm = '%' + searchTerm + '%';
+
+  db.query(sqlquery, [likeTerm], (err, result) => {
+    if (err) {
+      return next(err);
+    }
+
+    res.render('search', {
+      title: 'Search Books',
+      searchTerm: searchTerm,
+      searchResults: result
+    });
+  });
 });
 
 module.exports = router;
