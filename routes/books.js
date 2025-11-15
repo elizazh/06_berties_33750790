@@ -1,40 +1,56 @@
 const express = require('express');
 const router = express.Router();
-const db = global.db;
 
-/* D2: List all books -> views/list.ejs */
+// If someone visits /books, send them to the list
+router.get('/', (req, res) => res.redirect('/books/list'));
+
+/* List all books */
 router.get('/list', (req, res, next) => {
-  db.query('SELECT * FROM books', (err, rows) =>
-    err ? next(err) : res.render('list', { availableBooks: rows })
-  );
+  db.query('SELECT * FROM books', (err, result) => {
+    if (err) return next(err);
+    res.render('list', { availableBooks: result });
+  });
 });
 
-/* D3: Add book (GET form) */
+/* Add book (form) */
 router.get('/addbook', (req, res) => res.render('addbook'));
 
-/* D3: Add book (POST submit -> confirmation text) */
+/* Add book (submit) */
 router.post('/bookadded', (req, res, next) => {
-  const { name = '', price = '' } = req.body;
-  db.query('INSERT INTO books (name, price) VALUES (?, ?)', [name, price],
-    err => err ? next(err)
-              : res.send(' This book is added to database, name: ' + name + ' price ' + price));
+  const sql = 'INSERT INTO books (name, price) VALUES (?, ?)';
+  db.query(sql, [req.body.name, req.body.price], (err) => {
+    if (err) return next(err);
+    res.send(`This book is added to database, name: ${req.body.name} price ${req.body.price}`);
+  });
 });
 
-/* E1: Bargain books (< £20) -> reuse list.ejs */
+/* Bargains (< £20) */
 router.get('/bargainbooks', (req, res, next) => {
-  db.query('SELECT * FROM books WHERE price < 20', (err, rows) =>
-    err ? next(err) : res.render('list', { availableBooks: rows })
-  );
+  db.query('SELECT * FROM books WHERE price < 20', (err, result) => {
+    if (err) return next(err);
+    res.render('list', { availableBooks: result });
+  });
 });
 
-/* E2: Search (form) */
+/* Search pages */
 router.get('/search', (req, res) => res.render('search'));
 
-/* E2: Search result (advanced LIKE) -> reuse list.ejs */
+/* Exact search */
+router.get('/searchexact', (req, res, next) => {
+  const name = req.query.name || '';
+  db.query('SELECT * FROM books WHERE name = ?', [name], (err, result) => {
+    if (err) return next(err);
+    res.render('list', { availableBooks: result });
+  });
+});
+
+/* Advanced (partial match) */
 router.get('/searchresult', (req, res, next) => {
   const keyword = req.query.keyword || '';
-  db.query('SELECT * FROM books WHERE name LIKE ?', [`%${keyword}%`],
-    (err, rows) => err ? next(err) : res.render('list', { availableBooks: rows }));
+  db.query('SELECT * FROM books WHERE name LIKE ?', [`%${keyword}%`], (err, result) => {
+    if (err) return next(err);
+    res.render('list', { availableBooks: result });
+  });
 });
 
 module.exports = router;
