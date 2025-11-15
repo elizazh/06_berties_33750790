@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title><%= title || 'Add a New Book' %></title>
-  <link rel="stylesheet" href="/style.css">
+<title><%= (typeof title !== 'undefined') ? title : 'Add a New Book' %></title>
+<link rel="stylesheet" href="/style.css">
 </head>
 <body>
   <header class="site-header">
