@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Login audit</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <h1>Login audit</h1>
+
+    <table>
+      <tr>
+        <th>Username</th>
+        <th>Success</th>
+        <th>Time</th>
+      </tr>
+      <% audits.forEach(function(row){ %>
+      <tr>
+        <td><%= row.username %></td>
+        <td><%= row.success ? 'Yes' : 'No' %></td>
+        <td><%= row.loginTime %></td>
+      </tr>
+      <% }) %>
+    </table>
+
+    <p><a href="/">Back to home</a></p>
+  </body>
+</html>
