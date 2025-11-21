@@ -36,3 +36,8 @@ On the VM directly:
 
 Start the app: forever start index.js (or node index.js for testing)
 Open in a browser: http://localhost:8000/
+
+
+MySQL:
+SOURCE create_db.sql;
+SOURCE insert_test_data.sql;
