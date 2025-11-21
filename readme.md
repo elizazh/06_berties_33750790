@@ -35,3 +35,15 @@ Run these scripts in MySQL to create and populate the database.
 
 ```bash
 mysql -u berties_books_app -p
+4. Test user
+
+A sample user is inserted by `insert_test_data.sql`:
+
+- username: gold  
+- password: smiths  (stored as a bcrypt hash in the database)
+
+5. Running the app
+
+- Install dependencies: `npm install`
+- Start the app: `node index.js` (or using `forever start index.js` on the VM)
+- Open: `http://doc.gold.ac.uk/usr/417/` in a browser
