@@ -31,19 +31,16 @@ Passwords are **never stored in plain text**. They are hashed using **bcrypt** b
 
 ## 3. Database setup
 
-Run these scripts in MySQL to create and populate the database.
+4. Running the app
 
-```bash
-mysql -u berties_books_app -p
-4. Test user
+The app listens on port **8000**.
 
-A sample user is inserted by `insert_test_data.sql`:
+On the Goldsmiths server:
 
-- username: gold  
-- password: smiths  (stored as a bcrypt hash in the database)
+- The app is available at:  
+  **http://doc.gold.ac.uk/usr/417/**
 
-5. Running the app
+On the VM directly:
 
-- Install dependencies: `npm install`
-- Start the app: `node index.js` (or using `forever start index.js` on the VM)
-- Open: `http://doc.gold.ac.uk/usr/417/` in a browser
+- Start the app: `forever start index.js`  (or `node index.js` for testing)
+- Open in a browser: `http://localhost:8000/`
