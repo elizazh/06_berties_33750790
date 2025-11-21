@@ -1,11 +1,37 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"><title>Register</title></head>
-<body>
-  <h2>Register with us</h2>
-  <form>
-    <label>Name: <input type="text" required></label><br><br>
-    <label>Email: <input type="email" required></label><br><br>
-    <button type="button" onclick="alert('Demo only')">Submit</button>
-  </form>
-  <p><a href="/">Back to home</a></p>
-</body></html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Register</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <h1>Register</h1>
+
+    <form action="/users/registered" method="post">
+      <div>
+        <label>First name:</label>
+        <input type="text" name="first" required />
+      </div>
+      <div>
+        <label>Last name:</label>
+        <input type="text" name="last" required />
+      </div>
+      <div>
+        <label>Email:</label>
+        <input type="email" name="email" required />
+      </div>
+      <div>
+        <label>Username:</label>
+        <input type="text" name="username" required />
+      </div>
+      <div>
+        <label>Password:</label>
+        <input type="password" name="password" required />
+      </div>
+      <button type="submit">Register</button>
+    </form>
+
+    <p><a href="/">Back to home</a></p>
+  </body>
+</html>
