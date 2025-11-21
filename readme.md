@@ -1,45 +1,37 @@
-# 06_berties_33750790
+# Berties Book Shop – Lab 6 & 7
 
-**Bertie’s Books — Week 6 (ID: 33750790)**  
-Dynamic Web Apps — **Lab 6 (A–F)**
+Dynamic Web Apps coursework – Berties Book Shop app with user registration, login and password hashing.
 
-**Student:** Eliza Hussain (ehuss003)  
-**Live site:** http://www.doc.gold.ac.uk/usr/417/
+## 1. Overview
+
+This app is a simple Node.js + Express web application for managing a small book shop.  
+Features:
+
+- View all books
+- Add a new book
+- View bargain books (priced under £20)
+- Search for books by title keyword
+- Register a new user
+- Log in as an existing user
+- View a list of users
+- View a login audit (successful / failed logins)
+
+Passwords are **never stored in plain text**. They are hashed using **bcrypt** before being saved in the database.
+
+---
+
+## 2. Technologies
+
+- Node.js / Express
+- MySQL
+- EJS templates
+- bcrypt for password hashing
 
 ---
 
-## What this is
+## 3. Database setup
 
-Small Express + EJS app backed by a relational database (MySQL/MariaDB or compatible).  
-Implements core Lab 6 features:
+Run these scripts in MySQL to create and populate the database.
 
-- **6a/b/c:** Create schema + seed data, list & bargain views, exact/advanced search
-- **6d:** Small UI/UX improvements (styles, table/form polishing)
-- **6e/f (extension):** Clean routes, partials, and README + deploy to VM
-
----
-
-## Tech stack
-
-- **Node.js / Express**
-- **EJS** templates + partials (`views/partials`)
-- **Relational DB** (MySQL/MariaDB compatible)
-- **CSS:** `/public/style.css`
-
----
-# 1) Create DB + sample data
-mysql -u root -p < create_db.sql
-mysql -u root -p berties < insert_test_data.sql
-
-# 2) Start the app
-npm install
-node index.js
-Routes (server)
-	•	/ – Home
-	•	/about – About Bertie’s Books
-	•	/register (GET) → /registered (POST)
-	•	/books/list – List all books
-	•	/books/bargainbooks – Books under £20
-	•	/books/addbook (GET) → /books/bookadded (POST)
-	•	/books/search (GET) → /books/searchresult (POST)
-http://localhost:8000/books/list
+```bash
+mysql -u berties_books_app -p
