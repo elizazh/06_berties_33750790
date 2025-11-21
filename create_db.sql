@@ -16,3 +16,12 @@ CREATE USER IF NOT EXISTS 'berties_books_app'@'localhost' IDENTIFIED BY 'qwertyu
 GRANT ALL PRIVILEGES ON berties_books.* TO 'berties_books_app'@'localhost';
 
 FLUSH PRIVILEGES;
+CREATE TABLE IF NOT EXISTS users (
+  id INT AUTO_INCREMENT,
+  username VARCHAR(50) UNIQUE,
+  first VARCHAR(50),
+  last VARCHAR(50),
+  email VARCHAR(100),
+  hashedPassword VARCHAR(255),
+  PRIMARY KEY (id)
+);
