@@ -8,4 +8,5 @@ INSERT INTO books (name, price) VALUES
 ('Atlas of the World', 30.50),
 ('The Hobbit', 15.99);
 INSERT INTO users (username, first, last, email, hashedPassword)
-VALUES ('gold', 'Gold', 'Smiths', 'gold@example.com', '<HASH_GOES_HERE>');
+VALUES ('gold', 'Goldy', 'Smith', 'gold@example.com',
+        '$2b$10$5YXrQJL3mQ2buIV0kmJezpPA2k5y0Iz1OZq0F.hbUH85fCeFP1o');
