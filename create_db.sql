@@ -25,3 +25,11 @@ CREATE TABLE IF NOT EXISTS users (
   hashedPassword VARCHAR(255),
   PRIMARY KEY (id)
 );
+
+CREATE TABLE IF NOT EXISTS login_audit (
+  id INT AUTO_INCREMENT,
+  username VARCHAR(50),
+  success TINYINT(1),
+  loginTime DATETIME,
+  PRIMARY KEY (id)
+);
