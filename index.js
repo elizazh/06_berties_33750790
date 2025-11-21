@@ -7,20 +7,11 @@ const mysql = require('mysql2');
 
 const app = express();
 
-// ---------- Ensure 'active' is always defined for EJS ----------
-app.use((req, res, next) => {
-  // give every view a default 'active' so header.ejs never crashes
-  if (typeof res.locals.active === 'undefined') {
-    res.locals.active = '';
-  }
-  next();
-});
-
 // ---------- Database connection ----------
 const db = mysql.createPool({
   host: 'localhost',
-  user: 'berties_books_app',
-  password: 'qwertyuiop',
+  user: 'berties_books_app',   // same as Lab 6
+  password: 'qwertyuiop',      // same as Lab 6
   database: 'berties_books',
   waitForConnections: true,
   connectionLimit: 10,
@@ -34,19 +25,22 @@ global.db = db;
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-app.use(express.urlencoded({ extended: true })); // form POSTs
+app.use(express.urlencoded({ extended: true }));       // for form POSTs
 app.use(express.static(path.join(__dirname, 'public'))); // css, etc.
 
 // ---------- Routes ----------
 const booksRouter = require('./routes/books');
+const usersRouter = require('./routes/users');
+
 app.use('/books', booksRouter);
+app.use('/users', usersRouter);
 
 // Home page
 app.get('/', (req, res) => {
-  res.render('index'); // header.ejs can safely use 'active'
+  res.render('index');
 });
 
-// Optional shortcut to list
+// Optional shortcut: /list -> /books/list
 app.get('/list', (req, res) => {
   res.redirect('/books/list');
 });
@@ -57,9 +51,8 @@ app.use((err, req, res, next) => {
   res.status(500).send('Server or database error.');
 });
 
-const port = process.env.PORT || 8000;
-app.listen(port, () => {
-  console.log(`Berties Books app listening on port ${port}`);
+// Start server
+const PORT = 8000;
+app.listen(PORT, () => {
+  console.log(`Berties Books app listening on port ${PORT}`);
 });
-
-module.exports = app;
