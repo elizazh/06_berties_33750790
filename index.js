@@ -28,8 +28,18 @@ app.set('view engine', 'ejs');
 
 app.use(express.urlencoded({ extended: true }));       // for form POSTs
 app.use(express.static(path.join(__dirname, 'public'))); // css, etc.
+// Create a session
+app.use(session({
+  secret: 'somerandomstuff',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    expires: 600000  // 10 minutes
+  }
+}));
 
-// ---------- Routes ----------
+// Create an input sanitizer
+app.use(expressSanitizer());// ---------- Routes ----------
 const booksRouter = require('./routes/books');
 const usersRouter = require('./routes/users');
 
