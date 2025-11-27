@@ -1,7 +1,17 @@
 // routes/users.js
 // User registration, listing, login and audit
+// Create a session
+app.use(session({
+  secret: 'somerandomstuff',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    expires: 600000  // 10 minutes
+  }
+}));
 
-const express = require('express');
+// Create an input sanitizer
+app.use(expressSanitizer());const express = require('express');
 const bcrypt = require('bcrypt');
 
 const router = express.Router();
