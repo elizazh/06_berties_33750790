@@ -23,8 +23,24 @@ router.get('/register', (req, res) => {
 });
 
 // ---------- Handle registration ----------
-router.post('/registered', (req, res, next) => {
-  const plainPassword = req.body.password;
+router.post(
+  '/registered',
+  [
+    check('email').isEmail(),
+    check('username').isLength({ min: 5, max: 20 }),
+    check('password').isLength({ min: 8 })
+  ],    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      // validation failed – show register page again
+      return res.render('register', { errors: errors.array() });
+    }
+
+    // Sanitise inputs
+    const first = req.sanitize(req.body.first);
+    const last = req.sanitize(req.body.last);
+    const email = req.sanitize(req.body.email);
+    const username = req.sanitize(req.body.username);
+    const plainPassword = req.body.password; // will be hashed with bcrypt  function (req, res, next) {  const plainPassword = req.body.password;
 
   bcrypt.hash(plainPassword, saltRounds, function (err, hashedPassword) {
     if (err) return next(err);
