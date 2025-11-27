@@ -1,153 +1,212 @@
 // routes/users.js
-// User registration, listing, login and audit
-// Create a session
-app.use(session({
-  secret: 'somerandomstuff',
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    expires: 600000  // 10 minutes
-  }
-}));
+// User registration, login, authorisation, validation, sanitisation, audit.
 
-// Create an input sanitizer
-app.use(expressSanitizer());const express = require('express');
-const bcrypt = require('bcrypt');
-
+const express = require('express');
 const router = express.Router();
+const bcrypt = require('bcrypt');
+const { check, validationResult } = require('express-validator');
+
+const db = global.db;
 const saltRounds = 10;
 
-// ---------- Register form ----------
+// ===== Middleware to protect routes (Lab 8a: Authorisation) =====
+const redirectLogin = (req, res, next) => {
+  if (!req.session.userId) {
+    return res.redirect('./login'); // redirect to login page
+  }
+  next(); // user is logged in → proceed
+};
+
+// ===== Registration form (GET) =====
 router.get('/register', (req, res) => {
-  res.render('register');
+  res.render('register', {
+    errors: [],
+    old: {},
+  });
 });
 
-// ---------- Handle registration ----------
+// ===== Handle registration (POST) – Labs 7 + 8 =====
 router.post(
   '/registered',
   [
-    check('email').isEmail(),
-    check('username').isLength({ min: 5, max: 20 }),
-    check('password').isLength({ min: 8 })
-  ],    const errors = validationResult(req);
+    // Lab 8b: Validation
+    check('email')
+      .isEmail()
+      .withMessage('Please enter a valid email address.'),
+    check('username')
+      .isLength({ min: 5, max: 20 })
+      .withMessage('Username must be between 5 and 20 characters long.'),
+    check('password')
+      .isLength({ min: 8 })
+      .withMessage('Password must be at least 8 characters long.'),
+  ],
+  (req, res, next) => {
+    const errors = validationResult(req);
+
     if (!errors.isEmpty()) {
-      // validation failed – show register page again
-      return res.render('register', { errors: errors.array() });
+      // Re-display register page with errors + previously entered values
+      return res.render('register', {
+        errors: errors.array(),
+        old: {
+          first: req.body.first,
+          last: req.body.last,
+          email: req.body.email,
+          username: req.body.username,
+        },
+      });
     }
 
-    // Sanitise inputs
+    // Lab 8b/c: Sanitise inputs (protect against XSS)
     const first = req.sanitize(req.body.first);
     const last = req.sanitize(req.body.last);
     const email = req.sanitize(req.body.email);
     const username = req.sanitize(req.body.username);
-    const plainPassword = req.body.password; // will be hashed with bcrypt  function (req, res, next) {  const plainPassword = req.body.password;
 
-  bcrypt.hash(plainPassword, saltRounds, function (err, hashedPassword) {
-    if (err) return next(err);
+    // Do NOT sanitise password – it must be stored exactly then hashed
+    const plainPassword = req.body.password;
 
-    const sqlquery = `
-      INSERT INTO users (username, first, last, email, hashedPassword)
-      VALUES (?, ?, ?, ?, ?)
-    `;
-    const newUser = [
-      req.body.username,
-      req.body.first,
-      req.body.last,
-      req.body.email,
-      hashedPassword
-    ];
+    // Lab 7: hash password before storing
+    bcrypt.hash(plainPassword, saltRounds, (err, hashedPassword) => {
+      if (err) {
+        return next(err);
+      }
 
-    db.query(sqlquery, newUser, (err2, result) => {
-      if (err2) return next(err2);
+      const sql =
+        'INSERT INTO users (username, first, last, email, hashedPassword) VALUES (?, ?, ?, ?, ?)';
+      const params = [username, first, last, email, hashedPassword];
 
-      // Debug-style response as in the lab sheet
-      let message =
-        'Hello ' +
-        req.body.first +
-        ' ' +
-        req.body.last +
-        ' you are now registered! We will send an email to you at ' +
-        req.body.email;
+      db.query(sql, params, (err2) => {
+        if (err2) {
+          return next(err2);
+        }
 
-      message +=
-        '<br>Your password is: ' +
-        req.body.password +
-        '<br>Your hashed password is: ' +
-        hashedPassword;
+        // Debug-style response as in the lab sheet
+        let result =
+          'Hello ' +
+          first +
+          ' ' +
+          last +
+          ' you are now registered! We will send an email to you at ' +
+          email +
+          '. ';
+        result +=
+          'Your password is: ' +
+          plainPassword +
+          ' and your hashed password is: ' +
+          hashedPassword;
 
-      res.send(message);
+        res.send(result);
+      });
     });
+  }
+);
+
+// ===== List users – protected (Labs 7 + 8a) =====
+router.get('/list', redirectLogin, (req, res, next) => {
+  const sql =
+    'SELECT username, first, last, email FROM users ORDER BY username ASC';
+  db.query(sql, (err, results) => {
+    if (err) {
+      return next(err);
+    }
+    res.render('users_list', { users: results });
   });
 });
 
-// ---------- List users (no passwords) ----------
-router.get('/list', (req, res, next) => {
-  const sqlquery = 'SELECT username, first, last, email FROM users';
-
-  db.query(sqlquery, (err, result) => {
-    if (err) return next(err);
-    res.render('users_list', { users: result });
-  });
-});
-
-// ---------- Login form ----------
+// ===== Login form (GET) =====
 router.get('/login', (req, res) => {
-  res.render('login');
+  res.render('login', { error: '' });
 });
 
-// ---------- Handle login + audit ----------
+// ===== Helper: record login attempts (Lab 7 extension) =====
+function recordAudit(username, success, callback) {
+  const sql =
+    'INSERT INTO login_audit (username, success, loginTime) VALUES (?, ?, NOW())';
+  db.query(sql, [username, success ? 1 : 0], callback);
+}
+
+// ===== Handle login (POST) – Labs 7 + 8 =====
 router.post('/loggedin', (req, res, next) => {
-  const { username, password } = req.body;
+  const username = req.body.username;
+  const plainPassword = req.body.password;
 
-  const sqlquery = 'SELECT hashedPassword FROM users WHERE username = ?';
+  const sql = 'SELECT * FROM users WHERE username = ?';
+  db.query(sql, [username], (err, results) => {
+    if (err) {
+      return next(err);
+    }
 
-  db.query(sqlquery, [username], (err, result) => {
-    if (err) return next(err);
-
-    if (result.length === 0) {
-      // user not found -> record audit and fail
-      return recordAudit(username, 0, (err2) => {
-        if (err2) return next(err2);
-        res.send('Login failed: user not found');
+    if (results.length === 0) {
+      // No such user – failed login
+      return recordAudit(username, false, (auditErr) => {
+        if (auditErr) {
+          return next(auditErr);
+        }
+        return res.render('login', {
+          error: 'Login failed: incorrect username or password.',
+        });
       });
     }
 
-    const hashedPassword = result[0].hashedPassword;
+    const user = results[0];
+    const hashedPassword = user.hashedPassword;
 
-    bcrypt.compare(password, hashedPassword, function (err2, match) {
-      if (err2) return next(err2);
+    // Compare supplied password with stored hash (Lab 7)
+    bcrypt.compare(plainPassword, hashedPassword, (err2, match) => {
+      if (err2) {
+        return next(err2);
+      }
 
-      recordAudit(username, match ? 1 : 0, (err3) => {
-        if (err3) return next(err3);
+      if (match) {
+        // Successful login – create session (Lab 8a)
+        req.session.userId = username;
 
-        if (match) {
-          res.send('Login successful! Welcome ' + username);
-        } else {
-          res.send('Login failed: incorrect password');
-        }
-      });
+        // Record successful login in audit table (Lab 7 extension)
+        recordAudit(username, true, (auditErr) => {
+          if (auditErr) {
+            return next(auditErr);
+          }
+          res.send(
+            'Login successful! <a href="../">Home</a> | <a href="./logout">Logout</a>'
+          );
+        });
+      } else {
+        // Wrong password – failed login
+        recordAudit(username, false, (auditErr) => {
+          if (auditErr) {
+            return next(auditErr);
+          }
+          return res.render('login', {
+            error: 'Login failed: incorrect username or password.',
+          });
+        });
+      }
     });
   });
 });
 
-// ---------- Audit log page ----------
-router.get('/audit', (req, res, next) => {
-  const sqlquery =
-    'SELECT username, success, loginTime FROM login_audit ORDER BY loginTime DESC';
-
-  db.query(sqlquery, (err, result) => {
-    if (err) return next(err);
-    res.render('audit', { audits: result });
+// ===== Logout route (Lab 8a) =====
+router.get('/logout', redirectLogin, (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      return res.redirect('./');
+    }
+    res.send(
+      'You are now logged out. <a href="../">Home</a> | <a href="./login">Login again</a>'
+    );
   });
 });
 
-// ---------- Helper: insert into login_audit ----------
-function recordAudit(username, success, callback) {
-  const sqlquery =
-    'INSERT INTO login_audit (username, success, loginTime) VALUES (?, ?, NOW())';
-  const data = [username, success];
-
-  db.query(sqlquery, data, callback);
-}
+// ===== Audit route – show all login attempts (Lab 7 extension) =====
+router.get('/audit', redirectLogin, (req, res, next) => {
+  const sql =
+    'SELECT username, success, loginTime FROM login_audit ORDER BY loginTime DESC';
+  db.query(sql, (err, results) => {
+    if (err) {
+      return next(err);
+    }
+    res.render('audit', { audits: results });
+  });
+});
 
 module.exports = router;
