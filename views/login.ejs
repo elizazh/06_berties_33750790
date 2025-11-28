@@ -1,25 +1,34 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>Login</title>
-    <link rel="stylesheet" href="/style.css" />
-  </head>
-  <body>
-    <h1>Login</h1>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login – Berties Book Shop</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <h1>Login</h1>
 
-    <form action="/users/loggedin" method="post">
-      <div>
-        <label>Username:</label>
-        <input type="text" name="username" required />
-      </div>
-      <div>
-        <label>Password:</label>
-        <input type="password" name="password" required />
-      </div>
-      <button type="submit">Login</button>
-    </form>
+  <% if (error && error.length > 0) { %>
+    <p style="color:red;"><%= error %></p>
+  <% } %>
 
-    <p><a href="/">Back to home</a></p>
-  </body>
+  <form method="post" action="/users/loggedin">
+    <p>
+      <label for="username">Username:</label>
+      <input id="username" name="username" type="text" required />
+    </p>
+    <p>
+      <label for="password">Password:</label>
+      <input id="password" name="password" type="password" required />
+    </p>
+    <p>
+      <button type="submit">Log in</button>
+    </p>
+  </form>
+
+  <p>
+    <a href="/users/register">Register</a> |
+    <a href="/">Home</a>
+  </p>
+</body>
 </html>
