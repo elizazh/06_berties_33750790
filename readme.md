@@ -1,4 +1,4 @@
-Berties Book Shop – Lab 6 & 7
+Berties Book Shop – Lab 6 & 7 & 8
 
 Dynamic Web Apps coursework – Berties Book Shop app with user registration, login and password hashing.
 
@@ -36,5 +36,25 @@ On the VM directly:
 
 Start the app: forever start index.js (or node index.js for testing)
 Open in a browser: http://localhost:8000/
+## authorisation
 
+I used `express-session` to create sessions. On successful login in
+`/users/loggedin` I save `req.session.userId = username`. I added a
+`redirectLogin` middleware and applied it to `/users/list`, `/users/audit` and
+`/books/list` so these pages can only be accessed by logged-in users. I also
+added a `/users/logout` route that destroys the session.
+
+## validation
+
+I used `express-validator` in the `/users/registered` route to validate the
+registration form. The server checks that the email is valid, the username is
+between 5 and 20 characters, and the password is at least 8 characters long. If
+validation fails, the user is shown the register page again with error messages.
+
+## sanitisation
+
+I used `express-sanitizer` to protect against XSS attacks. On the registration
+page, I sanitise the `first`, `last`, `email` and `username` fields before using
+or storing them. This stops input like `Henry <script>alert("Gotcha!")</script>`
+from running as JavaScript.
 
