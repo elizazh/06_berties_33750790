@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Weather</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <h1>Weather</h1>
+
+    <form method="get" action="/weather">
+      <label for="city">City:</label>
+      <input
+        type="text"
+        id="city"
+        name="city"
+        value="<%= city || '' %>"
+        required
+      />
+      <button type="submit">Get weather</button>
+    </form>
+
+    <% if (error) { %>
+      <p style="color: red;"><%= error %></p>
+    <% } %>
+
+    <% if (weather) { %>
+      <h2>Weather for <%= weather.name %></h2>
+      <p>Temperature: <%= weather.temp %> °C</p>
+      <p>Humidity: <%= weather.humidity %> %</p>
+      <p>Conditions: <%= weather.description %></p>
+    <% } %>
+
+    <p><a href="/">Back to home</a></p>
+  </body>
+</html>
