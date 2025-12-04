@@ -1,5 +1,5 @@
 
-# Berties Book Shop – Labs 6, 7 & 8
+# Berties Book Shop – Labs 6-9
 
 Dynamic Web Apps coursework – Berties Book Shop app with:
 
@@ -104,7 +104,30 @@ Main tables used:
   - `loginTime` (DATETIME)
 
 A default test user `gold` with password `smiths` is created in the SQL scripts, so the marker can log in and test protected routes quickly.
+## Lab 9a - /weather (Calling an external API)
 
+The route `/weather` calls the OpenWeather API using the `request` library.
+The user can enter a city name, and the server sends a request to
+`http://api.openweathermap.org/data/2.5/weather` with the city, metric units
+and an API key. The JSON response is parsed and the temperature, humidity and
+description are shown on a web page. If the city is not valid or the API
+returns an error, a friendly error message is displayed instead of crashing.
+
+## Lab 9b - /api/books (Providing a JSON API)
+
+The route `/api/books` returns a JSON array of books from the database.
+
+It supports the following query parameters:
+
+- `search` – e.g. `/api/books?search=world` returns only books whose `name`
+  contains "world".
+- `minprice` and `max_price` – e.g. `/api/books?minprice=5&max_price=10`
+  returns books priced between 5 and 10 (inclusive).
+- `sort` – e.g. `/api/books?sort=name` sorts by name, and
+  `/api/books?sort=price` sorts by price.
+
+The route uses parameterised SQL queries (`?` placeholders) to avoid SQL
+injection and returns results in JSON so other programs can consume the data.
 ---
 
 ## 5. Running the App
