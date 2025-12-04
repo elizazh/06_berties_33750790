@@ -28,7 +28,8 @@ app.set('view engine', 'ejs');
 
 app.use(express.urlencoded({ extended: true }));       // for form POSTs
 app.use(express.static(path.join(__dirname, 'public'))); // css, etc.
-// Create a session
+
+// Session (Lab 8)
 app.use(session({
   secret: 'somerandomstuff',
   resave: false,
@@ -38,13 +39,19 @@ app.use(session({
   }
 }));
 
-// Create an input sanitizer
-app.use(expressSanitizer());// ---------- Routes ----------
+// Input sanitiser (Lab 8)
+app.use(expressSanitizer());
+
+// ---------- Routes ----------
 const booksRouter = require('./routes/books');
 const usersRouter = require('./routes/users');
+const weatherRouter = require('./routes/weather');
+const apiRouter = require('./routes/api');
 
 app.use('/books', booksRouter);
 app.use('/users', usersRouter);
+app.use('/weather', weatherRouter);
+app.use('/api', apiRouter);
 
 // Home page
 app.get('/', (req, res) => {
